@@ -1,3 +1,4 @@
+import 'package:brick_breaker/src/widgets/overlay_counter.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -77,6 +78,8 @@ class _GameAppState extends State<GameApp> {
                                     title: 'Y O U   W O N ! ! !',
                                     subtitle: 'Tap to Play Again',
                                   ),
+                              PlayState.countDown.name: (context, game) =>
+                                  const OverlayCounter(),
                             },
                           ),
                         ),

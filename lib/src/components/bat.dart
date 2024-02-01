@@ -49,7 +49,7 @@ class Bat extends PositionComponent
   void onLoad() {
     //moves the bat with accelerometer
     super.onLoad();
-    startListening();
+    //starListeninAcelerometter();
   }
 
   void moveBy(double dx) {
@@ -66,14 +66,24 @@ class Bat extends PositionComponent
   }
 
   //moves the bat with accelerometer
-  void startListening() {
+  double targetPositionX = 0.0;
+  void starListeninAcelerometter() {
     accelerometerEventStream.call().listen(
       (event) {
-        moveBy(event.x * 30);
+        targetPositionX = event.y * 10;
       },
       onError: (error) {
         debugPrint(error.toString());
       },
     );
   }
+
+//   @override
+//   void update(double dt) {
+//     //moves the bat with accelerometer
+//     super.update(dt);
+//     double lerpFactor = 0.2;
+//     position.x += (targetPositionX - position.x) * lerpFactor;
+//     position.x = position.x.clamp(size.x / 2, game.width - size.x / 2);
+//   }
 }

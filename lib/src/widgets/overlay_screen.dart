@@ -22,7 +22,7 @@ class OverlayScreen extends StatelessWidget {
             title,
             style: Theme.of(context).textTheme.headlineLarge,
           ).animate().slideY(duration: 750.ms, begin: -3, end: 0),
-          const SizedBox(height: 16),
+          const SizedBox(height: 36),
           Text(
             subtitle,
             style: Theme.of(context).textTheme.headlineSmall,

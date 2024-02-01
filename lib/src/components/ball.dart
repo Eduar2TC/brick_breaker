@@ -1,5 +1,9 @@
+import 'package:brick_breaker/src/components/audio.dart';
+import 'package:brick_breaker/src/components/particles.dart';
+import 'package:brick_breaker/src/widgets/game_app.dart';
 import 'package:flame/collisions.dart'; // Add this import
 import 'package:flame/components.dart';
+import 'package:flame/particles.dart';
 import 'package:flutter/material.dart';
 
 import '../brick_breaker.dart'; // And this import
@@ -39,6 +43,7 @@ class Ball extends CircleComponent
       Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollisionStart(intersectionPoints, other);
     if (other is PlayArea) {
+      BrickBreakerAudio.playHitWithArea();
       if (intersectionPoints.first.y <= 0) {
         //detection colision with play area
         velocity.y = -velocity.y;
@@ -53,9 +58,9 @@ class Ball extends CircleComponent
         //removeFromParent();
         add(
           RemoveEffect(
-              delay: 0.35,
-              onComplete: () =>
-                  game.playState = PlayState.gameOver), //game over
+            delay: 0.35,
+            onComplete: () => game.playState = PlayState.gameOver,
+          ), //game over
         ); //remove ball
       }
     } else if (other is Bat) {
@@ -63,7 +68,13 @@ class Ball extends CircleComponent
       velocity.y = -velocity.y;
       velocity.x = velocity.x +
           (position.x - other.position.x) / other.size.x * game.width * 0.3;
+      BrickBreakerAudio.playHitWithBat();
     } else if (other is Brick) {
+      // add(
+      //   ParticleSystemComponent(
+      //     particle: explodeBrickParticle(),
+      //   ),
+      // );
       //detection collision top and bottom of brick
       if (position.y < other.position.y - other.size.y / 2) {
         velocity.y = -velocity.y;
@@ -76,6 +87,7 @@ class Ball extends CircleComponent
         velocity.x = -velocity.x;
       }
       velocity.setFrom(velocity * difficultyModifier); //personalize this
+      BrickBreakerAudio.playBrickHitSound();
     } else {
       debugPrint('collision with $other');
     }

@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:math' as math;
+import 'package:brick_breaker/src/components/audio.dart';
+import 'package:brick_breaker/src/widgets/overlay_counter.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
@@ -9,7 +11,7 @@ import 'components/brick.dart';
 import 'components/components.dart';
 import 'config.dart';
 
-enum PlayState { welcome, playing, won, gameOver }
+enum PlayState { welcome, countDown, playing, won, gameOver }
 
 class BrickBreaker extends FlameGame
     with HasCollisionDetection, KeyboardEvents, TapDetector {
@@ -39,6 +41,9 @@ class BrickBreaker extends FlameGame
         overlays.remove(PlayState.welcome.name);
         overlays.remove(PlayState.gameOver.name);
         overlays.remove(PlayState.won.name);
+      case PlayState.countDown:
+        overlays.remove(PlayState.welcome.name);
+        overlays.add(PlayState.countDown.name);
     }
   }
 
@@ -58,6 +63,7 @@ class BrickBreaker extends FlameGame
   //init game
   void starGame() {
     if (playState == PlayState.playing) return;
+
     //remove all components game over statw
     world.removeAll(world.children.query<Ball>());
     world.removeAll(world.children.query<Bat>());
@@ -66,6 +72,9 @@ class BrickBreaker extends FlameGame
     playState = PlayState.playing;
     score.value = 0;
 
+    // playState = PlayState.countDown;
+    // Future.delayed(const Duration(seconds: 3), () {});
+    //add ball
     world.add(
       Ball(
         radius: ballRadius,
@@ -77,6 +86,7 @@ class BrickBreaker extends FlameGame
         difficultyModifier: difficultyModifier,
       ),
     );
+
     //add the bat
     world.add(
       Bat(
@@ -97,6 +107,8 @@ class BrickBreaker extends FlameGame
             colors[i],
           ),
     ]);
+
+    //BrickBreakerAudio.playBackgroundMusic();
   }
 
   @override
@@ -110,8 +122,8 @@ class BrickBreaker extends FlameGame
     world.removeAll(world.children.query<Ball>());
     world.removeAll(world.children.query<Bat>());
     world.removeAll(world.children.query<Brick>());
-    // playState = PlayState.gameOver;
     overlays.add(playState.name);
+    BrickBreakerAudio.gameOver();
   }
 
   //keyboard events

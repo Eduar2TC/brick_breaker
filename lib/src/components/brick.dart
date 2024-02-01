@@ -1,3 +1,4 @@
+import 'package:brick_breaker/src/components/particles.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,14 @@ class Brick extends RectangleComponent
     super.onCollisionStart(intersectionPoints, other);
     removeFromParent();
     game.score.value++; //increment score game
+    //add particle effect
+    game.world.add(
+      ParticleSystemComponent(
+        priority: 100,
+        particle: explodeBrickParticle(paint),
+        position: position.clone(),
+      ),
+    );
     //game wins when all bricks are removed
     if (game.world.children.query<Brick>().length == 1) {
       game.playState = PlayState.won; //game won
