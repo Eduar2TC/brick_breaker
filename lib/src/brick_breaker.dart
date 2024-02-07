@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math' as math;
 import 'package:brick_breaker/src/components/audio.dart';
-import 'package:brick_breaker/src/widgets/overlay_counter.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
@@ -23,6 +22,7 @@ class BrickBreaker extends FlameGame
           ),
         );
   final ValueNotifier<int> score = ValueNotifier(0); //score game
+
   double get width => size.x; // size is inherited from FlameGame
   double get height => size.y; // size is inherited from FlameGame
   final rand = math.Random();
@@ -61,7 +61,7 @@ class BrickBreaker extends FlameGame
   }
 
   //init game
-  void starGame() {
+  void startGame() {
     if (playState == PlayState.playing) return;
 
     //remove all components game over statw
@@ -69,23 +69,9 @@ class BrickBreaker extends FlameGame
     world.removeAll(world.children.query<Bat>());
     world.removeAll(world.children.query<Brick>());
 
+    playState = PlayState.countDown;
     playState = PlayState.playing;
     score.value = 0;
-
-    // playState = PlayState.countDown;
-    // Future.delayed(const Duration(seconds: 3), () {});
-    //add ball
-    world.add(
-      Ball(
-        radius: ballRadius,
-        position:
-            size / 2, //size is the zise of the game screen (width, height)
-        velocity: Vector2((rand.nextDouble() - 0.5) * width, height * 0.2)
-            .normalized()
-          ..scale(height / 4),
-        difficultyModifier: difficultyModifier,
-      ),
-    );
 
     //add the bat
     world.add(
@@ -108,13 +94,30 @@ class BrickBreaker extends FlameGame
           ),
     ]);
 
+    //delay to start the game
+    Future.delayed(const Duration(seconds: 8), () {
+      world.add(
+        Ball(
+          radius: ballRadius,
+          position:
+              size / 2, //size is the zise of the game screen (width, height)
+          velocity: Vector2((rand.nextDouble() - 0.5) * width, -height * 0.2)
+              .normalized()
+            ..scale(height / 4),
+          difficultyModifier: difficultyModifier,
+        ),
+      );
+      //remove overlay count down
+      overlays.remove(PlayState.countDown.name);
+    });
+
     //BrickBreakerAudio.playBackgroundMusic();
   }
 
   @override
   void onTap() {
     super.onTap();
-    starGame();
+    startGame();
   }
 
   //remove all components ui game over state
@@ -139,7 +142,7 @@ class BrickBreaker extends FlameGame
       //init game with keyboard
       case LogicalKeyboardKey.space:
       case LogicalKeyboardKey.enter:
-        starGame();
+        startGame();
     }
     return KeyEventResult.handled;
   }

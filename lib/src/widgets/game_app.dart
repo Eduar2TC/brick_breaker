@@ -18,7 +18,6 @@ class GameApp extends StatefulWidget {
 
 class _GameAppState extends State<GameApp> {
   late final BrickBreaker game;
-
   @override
   void initState() {
     super.initState();
