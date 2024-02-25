@@ -16,6 +16,7 @@ final List<Color> colors = List.generate(
     10,
     (index) => Color((Random().nextDouble() * 0xFFFFFF).toInt() << 0)
         .withOpacity(1.0));
+
 const brickGutter = gameWidth * 0.015;
 final brickWidth =
     (gameWidth - (brickGutter * (colors.length + 1))) / colors.length;

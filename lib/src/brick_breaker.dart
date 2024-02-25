@@ -57,11 +57,11 @@ class BrickBreaker extends FlameGame
 
     playState = PlayState.welcome;
 
-    //debugMode = true; // To here.
+    //debugMode = true; // show hitboxes
   }
 
   //init game
-  void startGame() {
+  Future<void> startGame() async {
     if (playState == PlayState.playing) return;
 
     //remove all components game over statw
@@ -82,20 +82,35 @@ class BrickBreaker extends FlameGame
       ),
     );
     //generate the bricks
-    world.addAll([
-      for (var i = 0; i < colors.length; i++)
-        for (var j = 1; j <= 5; j++)
-          Brick(
-            Vector2(
-              (i + 0.5) * brickWidth + (i + 1) * brickGutter,
-              (j + 2.0) * brickHeight + (j + 1) * brickGutter,
-            ),
-            colors[i],
+    // world.addAll([
+    //   for (var i = 0; i < colors.length; i++)
+    //     for (var j = 1; j <= 5; j++)
+    //       Brick(
+    //         Vector2(
+    //           (i + 0.5) * brickWidth + (i + 1) * brickGutter,
+    //           (j + 2.0) * brickHeight + (j + 1) * brickGutter,
+    //         ),
+    //         colors[i],
+    //       ),
+    // ]);
+    //progressive generation of bricks
+    for (var i = 0; i < colors.length; i++) {
+      for (var j = 1; j <= 5; j++) {
+        Brick brick = Brick(
+          Vector2(
+            (i + 0.5) * brickWidth + (i + 1) * brickGutter,
+            (j + 2.0) * brickHeight + (j + 1) * brickGutter,
           ),
-    ]);
+          colors[i],
+        );
+        world.add(brick);
+        await Future.delayed(
+            const Duration(milliseconds: 30)); // Add delay here
+      }
+    }
 
     //delay to start the game
-    Future.delayed(const Duration(seconds: 8), () {
+    Future.delayed(const Duration(milliseconds: 4500), () {
       world.add(
         Ball(
           radius: ballRadius,
@@ -126,7 +141,9 @@ class BrickBreaker extends FlameGame
     world.removeAll(world.children.query<Bat>());
     world.removeAll(world.children.query<Brick>());
     overlays.add(playState.name);
-    BrickBreakerAudio.gameOver();
+    if (playState == PlayState.gameOver) {
+      BrickBreakerAudio.gameOver();
+    }
   }
 
   //keyboard events
@@ -147,6 +164,6 @@ class BrickBreaker extends FlameGame
     return KeyEventResult.handled;
   }
 
-  @override
-  Color backgroundColor() => const Color(0xfff2e8cf);
+  // @override
+  //Color backgroundColor() => const Color(0xfff2e8cf);
 }

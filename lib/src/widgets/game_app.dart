@@ -1,3 +1,6 @@
+import 'package:brick_breaker/src/widgets/background/starry_background.dart';
+import 'package:brick_breaker/src/widgets/logo/logo.dart';
+import 'package:brick_breaker/src/widgets/logo/logo_animation.dart';
 import 'package:brick_breaker/src/widgets/overlay_counter.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +8,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../brick_breaker.dart';
 import '../config.dart';
-
 import 'overlay_screen.dart'; // Add this import
 import 'score_card.dart';
 
@@ -18,10 +20,12 @@ class GameApp extends StatefulWidget {
 
 class _GameAppState extends State<GameApp> {
   late final BrickBreaker game;
+  //getter game
+  BrickBreaker get games => game;
   @override
   void initState() {
     super.initState();
-    game = BrickBreaker(); //create game
+    game = BrickBreaker(); //create games
   }
 
   @override
@@ -47,45 +51,57 @@ class _GameAppState extends State<GameApp> {
               ],
             ),
           ),
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Center(
-                child: Column(
-                  children: [
-                    ScoreCard(score: game.score),
-                    Expanded(
-                      child: FittedBox(
-                        child: SizedBox(
-                          width: gameWidth,
-                          height: gameHeight,
-                          child: GameWidget(
-                            game: game,
-                            overlayBuilderMap: {
-                              PlayState.welcome.name: (context, game) =>
-                                  const OverlayScreen(
-                                    title: 'TAP TO PLAY',
-                                    subtitle: 'Use arrow keys or swipe',
-                                  ),
-                              PlayState.gameOver.name: (context, game) =>
-                                  const OverlayScreen(
-                                    title: 'G A M E   O V E R',
-                                    subtitle: 'Tap to Play Again',
-                                  ),
-                              PlayState.won.name: (context, game) =>
-                                  const OverlayScreen(
-                                    title: 'Y O U   W O N ! ! !',
-                                    subtitle: 'Tap to Play Again',
-                                  ),
-                              PlayState.countDown.name: (context, game) =>
-                                  const OverlayCounter(),
-                            },
+          child: CustomPaint(
+            painter: StarryBackground(),
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Center(
+                  child: Column(
+                    children: [
+                      ScoreCard(score: game.score),
+                      Expanded(
+                        child: FittedBox(
+                          child: SizedBox(
+                            width: gameWidth,
+                            height: gameHeight,
+                            child: GameWidget(
+                              game: game,
+                              overlayBuilderMap: {
+                                PlayState.welcome.name: (context, game) =>
+                                    Stack(
+                                      key: ValueKey(PlayState.welcome.name),
+                                      alignment: Alignment.center,
+                                      children: const [
+                                        LogoAnimation(
+                                          child: LogoGame(),
+                                        ),
+                                        OverlayScreen(
+                                          title: 'TAP TO PLAY',
+                                          subtitle: 'Use arrow keys or swipe',
+                                        ),
+                                      ],
+                                    ),
+                                PlayState.gameOver.name: (context, game) =>
+                                    const OverlayScreen(
+                                      title: 'G A M E   O V E R',
+                                      subtitle: 'Tap to Play Again',
+                                    ),
+                                PlayState.won.name: (context, game) =>
+                                    const OverlayScreen(
+                                      title: 'Y O U   W O N ! ! !',
+                                      subtitle: 'Tap to Play Again',
+                                    ),
+                                PlayState.countDown.name: (context, game) =>
+                                    const OverlayCounter(),
+                              },
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ), // To here.
+                    ],
+                  ), // To here.
+                ),
               ),
             ),
           ),

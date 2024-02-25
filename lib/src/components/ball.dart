@@ -45,7 +45,7 @@ class Ball extends CircleComponent
     if (other is PlayArea) {
       BrickBreakerAudio.playHitWithArea();
       if (intersectionPoints.first.y <= 0) {
-        //detection colision with play area
+        //detection collision with play area
         velocity.y = -velocity.y;
       } else if (intersectionPoints.first.x <= 0) {
         //detect collision with left play area
@@ -64,17 +64,12 @@ class Ball extends CircleComponent
         ); //remove ball
       }
     } else if (other is Bat) {
-      //detection colision with bat
+      //detection collision with bat
       velocity.y = -velocity.y;
       velocity.x = velocity.x +
           (position.x - other.position.x) / other.size.x * game.width * 0.3;
       BrickBreakerAudio.playHitWithBat();
     } else if (other is Brick) {
-      // add(
-      //   ParticleSystemComponent(
-      //     particle: explodeBrickParticle(),
-      //   ),
-      // );
       //detection collision top and bottom of brick
       if (position.y < other.position.y - other.size.y / 2) {
         velocity.y = -velocity.y;

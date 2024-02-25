@@ -15,24 +15,35 @@ class OverlayScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: const Alignment(0, -0.15),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            title,
-            style: Theme.of(context).textTheme.headlineLarge,
-          ).animate().slideY(duration: 750.ms, begin: -3, end: 0),
-          const SizedBox(height: 36),
-          Text(
-            subtitle,
-            style: Theme.of(context).textTheme.headlineSmall,
-          )
-              .animate(onPlay: (controller) => controller.repeat())
-              .fadeIn(duration: 1.seconds)
-              .then()
-              .fadeOut(duration: 1.seconds),
-        ],
-      ),
+      child: Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(50),
+          border: Border.all(
+            color: Theme.of(context).colorScheme.onPrimaryContainer,
+            width: 3,
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              title,
+              style: Theme.of(context).textTheme.headlineLarge,
+            ).animate().slideY(duration: 750.ms, begin: -3, end: 0),
+            const SizedBox(height: 36),
+            Text(
+              subtitle,
+              style: Theme.of(context).textTheme.headlineSmall,
+            )
+                .animate(onPlay: (controller) => controller.repeat())
+                .fadeIn(duration: 1.seconds)
+                .then()
+                .fadeOut(duration: 1.seconds),
+          ],
+        ),
+      ).animate().scaleXY(duration: 0.5.seconds, begin: 0.5, end: 1),
     );
   }
 }

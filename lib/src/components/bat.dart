@@ -20,6 +20,7 @@ class Bat extends PositionComponent
         );
 
   final Radius cornerRadius;
+  double targetPositionX = 0.0; //accelerometer tracker
 
   final _paint = Paint()
     ..color = const Color(0xff1e6091)
@@ -47,9 +48,9 @@ class Bat extends PositionComponent
 
   @override
   void onLoad() {
-    //moves the bat with accelerometer
     super.onLoad();
-    //starListeninAcelerometter();
+    //moves the bat with accelerometer
+    starListeninAcelerometter();
   }
 
   void moveBy(double dx) {
@@ -66,11 +67,10 @@ class Bat extends PositionComponent
   }
 
   //moves the bat with accelerometer
-  double targetPositionX = 0.0;
   void starListeninAcelerometter() {
     accelerometerEventStream.call().listen(
       (event) {
-        targetPositionX = event.y * 10;
+        targetPositionX = event.x * 10;
       },
       onError: (error) {
         debugPrint(error.toString());
@@ -78,12 +78,10 @@ class Bat extends PositionComponent
     );
   }
 
-//   @override
-//   void update(double dt) {
-//     //moves the bat with accelerometer
-//     super.update(dt);
-//     double lerpFactor = 0.2;
-//     position.x += (targetPositionX - position.x) * lerpFactor;
-//     position.x = position.x.clamp(size.x / 2, game.width - size.x / 2);
-//   }
+  @override
+  void update(double dt) {
+    //moves the bat with accelerometer
+    super.update(dt);
+    moveBy(targetPositionX);
+  }
 }
