@@ -1,20 +1,16 @@
 import 'package:brick_breaker/src/components/audio.dart';
-import 'package:brick_breaker/src/components/particles.dart';
-import 'package:brick_breaker/src/widgets/game_app.dart';
 import 'package:flame/collisions.dart'; // Add this import
 import 'package:flame/components.dart';
-import 'package:flame/particles.dart';
+import 'package:flame/effects.dart';
 import 'package:flutter/material.dart';
 
-import '../brick_breaker.dart'; // And this import
-import 'play_area.dart'; // And this one too
-
-import 'package:flame/effects.dart';
+import '../screens/levels/level_one.dart'; // And this import
 import 'bat.dart';
 import 'brick.dart';
+import 'play_area.dart'; // And this one too
 
 class Ball extends CircleComponent
-    with CollisionCallbacks, HasGameReference<BrickBreaker> {
+    with CollisionCallbacks, HasGameReference<LevelOne> {
   // Add these mixins
   Ball({
     required this.velocity,

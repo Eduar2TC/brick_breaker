@@ -3,13 +3,13 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
-import '../brick_breaker.dart';
 import '../config.dart';
+import '../screens/levels/level_one.dart';
 import 'ball.dart';
 import 'bat.dart';
 
 class Brick extends RectangleComponent
-    with CollisionCallbacks, HasGameReference<BrickBreaker> {
+    with CollisionCallbacks, HasGameReference<LevelOne> {
   Brick(Vector2 position, Color color)
       : super(
           position: position,

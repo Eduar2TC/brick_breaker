@@ -1,10 +1,13 @@
 import 'package:brick_breaker/src/config.dart';
-import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
 class RectangleButton extends StatefulWidget {
-   const RectangleButton({super.key, required this.icon, required this.btnColor, required this.textColor});
-  static  double width = gameWidth * 0.10;
+  const RectangleButton(
+      {super.key,
+      required this.icon,
+      required this.btnColor,
+      required this.textColor});
+  static double width = gameWidth * 0.10;
   static const double height = gameHeight * 0.03;
   final MaterialAccentColor btnColor;
   final Color textColor;
@@ -15,7 +18,6 @@ class RectangleButton extends StatefulWidget {
 }
 
 class _RectangleButtonState extends State<RectangleButton> {
-
   double get width => RectangleButton.width;
   MaterialAccentColor get btnColor => widget.btnColor;
   Color get textColor => widget.textColor;
@@ -41,9 +43,9 @@ class _RectangleButtonState extends State<RectangleButton> {
       ),
       child: InkWell(
         onTap: () {
-        width  = RectangleButton.width + RectangleButton.width * 0.10;
-        //pause game
-        // widget.game?.pauseEngine();
+          width = RectangleButton.width + RectangleButton.width * 0.10;
+          //pause game
+          // widget.game?.pauseEngine();
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 100),
@@ -51,7 +53,7 @@ class _RectangleButtonState extends State<RectangleButton> {
           width: RectangleButton.width,
           height: RectangleButton.height,
           onEnd: () {
-            if( width >= gameWidth * 0.10 ){
+            if (width >= gameWidth * 0.10) {
               width = RectangleButton.width - RectangleButton.width * 0.10;
             }
           },
@@ -66,11 +68,12 @@ class _RectangleButtonState extends State<RectangleButton> {
                 right: BorderSide(color: Colors.black12, width: 3)),
           ),
           child: Center(
-              child: Icon(
-                widget.icon,
-            color: textColor,
-            size: RectangleButton.width * 0.5,
-          ),),
+            child: Icon(
+              widget.icon,
+              color: textColor,
+              size: RectangleButton.width * 0.5,
+            ),
+          ),
         ),
       ),
     );

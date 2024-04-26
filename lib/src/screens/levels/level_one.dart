@@ -1,28 +1,30 @@
 import 'dart:async';
 import 'dart:math' as math;
+
 import 'package:brick_breaker/src/components/audio.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'components/brick.dart';
-import 'components/components.dart';
-import 'config.dart';
+
+import '../../components/brick.dart';
+import '../../components/components.dart';
+import '../../config.dart';
 
 enum PlayState { welcome, countDown, playing, won, gameOver }
 
-class BrickBreaker extends FlameGame
+class LevelOne extends FlameGame
     with HasCollisionDetection, KeyboardEvents, TapDetector {
-  BrickBreaker()
+  LevelOne()
       : super(
           camera: CameraComponent.withFixedResolution(
             width: gameWidth,
             height: gameHeight,
           ),
         );
-  final ValueNotifier<int> score = ValueNotifier(0); //score game
 
+  final ValueNotifier<int> score = ValueNotifier(0); //score game
   double get width => size.x; // size is inherited from FlameGame
   double get height => size.y; // size is inherited from FlameGame
   final rand = math.Random();
@@ -38,6 +40,7 @@ class BrickBreaker extends FlameGame
       case PlayState.won:
         overlays.add(playState.name);
       case PlayState.playing:
+        overlays.remove('levels');
         overlays.remove(PlayState.welcome.name);
         overlays.remove(PlayState.gameOver.name);
         overlays.remove(PlayState.won.name);
@@ -63,7 +66,7 @@ class BrickBreaker extends FlameGame
   //init game
   Future<void> startGame() async {
     if (playState == PlayState.playing) return;
-
+    debugPrint('Playing');
     //remove all components game over statw
     world.removeAll(world.children.query<Ball>());
     world.removeAll(world.children.query<Bat>());
@@ -81,7 +84,7 @@ class BrickBreaker extends FlameGame
         position: Vector2(width / 2, height * 0.95),
       ),
     );
-    //generate the bricks
+    //generate the bricks (default)
     // world.addAll([
     //   for (var i = 0; i < colors.length; i++)
     //     for (var j = 1; j <= 5; j++)
@@ -93,7 +96,8 @@ class BrickBreaker extends FlameGame
     //         colors[i],
     //       ),
     // ]);
-    //progressive generation of bricks
+
+    /*progressive generation of bricks
     for (var i = 0; i < colors.length; i++) {
       for (var j = 1; j <= 5; j++) {
         Brick brick = Brick(
@@ -108,14 +112,40 @@ class BrickBreaker extends FlameGame
             const Duration(milliseconds: 30)); // Add delay here
       }
     }
-
+    */
+    List<List<int>> heartPattern = [
+      [0, 0, 1, 0, 0, 0, 1, 0, 0],
+      [0, 1, 0, 1, 0, 1, 0, 1, 0],
+      [1, 0, 0, 0, 1, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 1],
+      [0, 1, 0, 0, 0, 0, 0, 1, 0],
+      [0, 0, 1, 0, 0, 0, 1, 0, 0],
+      [0, 0, 0, 1, 0, 1, 0, 0, 0],
+      [0, 0, 0, 0, 1, 0, 0, 0, 0],
+    ];
+    for (var i = 0; i < heartPattern.length; i++) {
+      for (var j = 0; j < heartPattern[i].length; j++) {
+        if (heartPattern[i][j] == 1) {
+          Brick brick = Brick(
+            Vector2(
+              (j + 0.5) * brickWidth + (j + 1) * brickGutter,
+              (i + 2.0) * brickHeight + (i + 1) * brickGutter,
+            ),
+            colors[i],
+          );
+          world.add(brick);
+          await Future.delayed(
+              const Duration(milliseconds: 30)); // Add delay here
+        }
+      }
+    }
     //delay to start the game
-    Future.delayed(const Duration(milliseconds: 4500), () {
+    Future.delayed(const Duration(milliseconds: 5500), () {
       world.add(
         Ball(
           radius: ballRadius,
           position:
-              size / 2, //size is the zise of the game screen (width, height)
+              size / 2, //size is the size of the game screen (width, height)
           velocity: Vector2((rand.nextDouble() - 0.5) * width, -height * 0.2)
               .normalized()
             ..scale(height / 4),
@@ -129,11 +159,12 @@ class BrickBreaker extends FlameGame
     //BrickBreakerAudio.playBackgroundMusic();
   }
 
-  @override
+  /*@override
   void onTap() {
     super.onTap();
     startGame();
-  }
+    //overlays.add('levels');
+  }*/
 
   //remove all components ui game over state
   void gameOver() {
@@ -148,8 +179,7 @@ class BrickBreaker extends FlameGame
 
   //keyboard events
   @override
-  KeyEventResult onKeyEvent(
-      RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+  KeyEventResult onKeyEvent(event, Set<LogicalKeyboardKey> keysPressed) {
     super.onKeyEvent(event, keysPressed);
     switch (event.logicalKey) {
       case LogicalKeyboardKey.arrowLeft:
@@ -164,6 +194,6 @@ class BrickBreaker extends FlameGame
     return KeyEventResult.handled;
   }
 
-  // @override
-  //Color backgroundColor() => const Color(0xfff2e8cf);
+  @override
+  Color backgroundColor() => const Color(0xfff2e8cf);
 }

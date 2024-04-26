@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class LogoGame extends StatelessWidget {
-  const LogoGame({
+class LogoTitle extends StatelessWidget {
+  const LogoTitle({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 150, left: 20),
+      margin: const EdgeInsets.only(top: 100, left: 20),
       child: Align(
         alignment: Alignment.topCenter,
         child: RichText(
